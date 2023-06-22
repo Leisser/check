@@ -1,0 +1,15 @@
+
+stop all running containers
+    docker stop $(docker ps --filter status=running -q)
+
+
+
+
+delete all domant containers
+    docker rm $(docker ps --filter status=exited -q)
+
+
+image prepare to move to hub
+
+
+image move to hub

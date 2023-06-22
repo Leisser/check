@@ -1,0 +1,27 @@
+6
+
+I was also using the official image (FROM postgres) and I was able to change the config by executing the following commands.
+
+The first thing is to locate the PostgreSQL config file. This can be done by executing this command in your running database.
+
+SHOW config_file;
+I my case it returns /data/postgres/postgresql.conf.
+
+The next step is to find out what is the hash of your running PostgreSQL docker container.
+
+docker ps -a
+This should return a list of all the running containers. In my case it looks like this.
+
+...
+0ba35e5427d9    postgres    "docker-entrypoint.s…" ....
+...
+Now you have to switch to the bash inside your container by executing:
+
+docker exec -it 0ba35e5427d9 /bin/bash
+Inside the container check if the config is at the correct path and display it.
+
+cat /data/postgres/postgresql.conf
+I wanted to change the max connections from 100 to 1000 and the shared buffer from 128MB to 3GB. With the sed command I can do a search and replace with the corresponding variables ins the config.
+
+sed -i -e"s/^max_connections = 100.*$/max_connections = 1000/" /data/postgres/postgresql.conf
+sed -i -e"s/^shared_buffers = 128MB.*$/shared_buffers = 3GB/" /data/postgres/postgresql.conf
